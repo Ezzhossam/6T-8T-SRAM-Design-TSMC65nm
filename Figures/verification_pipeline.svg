@@ -1,0 +1,100 @@
+<svg viewBox="0 0 1400 460" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#4b5563"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="460" fill="#ffffff"/>
+
+  <text x="700" y="38" text-anchor="middle" font-size="24" font-weight="700" fill="#111827">
+    Design &amp; Verification Flow
+  </text>
+  <text x="700" y="62" text-anchor="middle" font-size="14" fill="#6b7280">
+    Applied identically to the 6T and 8T SRAM cells
+  </text>
+
+  <!-- Step boxes -->
+  <!-- Step 1 -->
+  <g>
+    <rect x="30" y="130" width="160" height="90" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-width="2"/>
+    <text x="110" y="165" text-anchor="middle" font-size="15" font-weight="600" fill="#312e81">Schematic</text>
+    <text x="110" y="184" text-anchor="middle" font-size="15" font-weight="600" fill="#312e81">Capture</text>
+    <text x="110" y="204" text-anchor="middle" font-size="11" fill="#4338ca">Cadence Virtuoso</text>
+  </g>
+
+  <!-- Step 2 -->
+  <g>
+    <rect x="220" y="130" width="160" height="90" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-width="2"/>
+    <text x="300" y="165" text-anchor="middle" font-size="15" font-weight="600" fill="#312e81">CR / PR</text>
+    <text x="300" y="184" text-anchor="middle" font-size="15" font-weight="600" fill="#312e81">Sizing</text>
+    <text x="300" y="204" text-anchor="middle" font-size="11" fill="#4338ca">Ratio-based W/L calc</text>
+  </g>
+
+  <!-- Step 3 -->
+  <g>
+    <rect x="410" y="130" width="170" height="90" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+    <text x="495" y="158" text-anchor="middle" font-size="15" font-weight="600" fill="#065f46">Transient</text>
+    <text x="495" y="177" text-anchor="middle" font-size="15" font-weight="600" fill="#065f46">Verification</text>
+    <text x="495" y="197" text-anchor="middle" font-size="11" fill="#047857">Cadence ADE</text>
+    <text x="495" y="211" text-anchor="middle" font-size="11" fill="#047857">Write / Hold / Read</text>
+  </g>
+
+  <!-- Step 4 -->
+  <g>
+    <rect x="610" y="130" width="160" height="90" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+    <text x="690" y="165" text-anchor="middle" font-size="15" font-weight="600" fill="#9a3412">Physical</text>
+    <text x="690" y="184" text-anchor="middle" font-size="15" font-weight="600" fill="#9a3412">Layout</text>
+    <text x="690" y="204" text-anchor="middle" font-size="11" fill="#c2410c">TSMC 65nm rules</text>
+  </g>
+
+  <!-- Step 5 -->
+  <g>
+    <rect x="800" y="130" width="140" height="90" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+    <text x="870" y="170" text-anchor="middle" font-size="15" font-weight="600" fill="#7f1d1d">DRC</text>
+    <text x="870" y="190" text-anchor="middle" font-size="11" fill="#b91c1c">Calibre</text>
+    <text x="870" y="204" text-anchor="middle" font-size="11" fill="#b91c1c">0 violations</text>
+  </g>
+
+  <!-- Step 6 -->
+  <g>
+    <rect x="970" y="130" width="140" height="90" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+    <text x="1040" y="170" text-anchor="middle" font-size="15" font-weight="600" fill="#7f1d1d">LVS</text>
+    <text x="1040" y="190" text-anchor="middle" font-size="11" fill="#b91c1c">Calibre</text>
+    <text x="1040" y="204" text-anchor="middle" font-size="11" fill="#b91c1c">Clean match</text>
+  </g>
+
+  <!-- Step 7 -->
+  <g>
+    <rect x="1140" y="130" width="160" height="90" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+    <text x="1220" y="165" text-anchor="middle" font-size="15" font-weight="600" fill="#7f1d1d">PEX</text>
+    <text x="1220" y="184" text-anchor="middle" font-size="11" fill="#b91c1c">Parasitic Extraction</text>
+    <text x="1220" y="204" text-anchor="middle" font-size="11" fill="#b91c1c">R + C</text>
+  </g>
+
+  <!-- Arrows row 1 -->
+  <line x1="190" y1="175" x2="216" y2="175" stroke="#4b5563" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="380" y1="175" x2="406" y2="175" stroke="#4b5563" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="580" y1="175" x2="606" y2="175" stroke="#4b5563" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="770" y1="175" x2="796" y2="175" stroke="#4b5563" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="940" y1="175" x2="966" y2="175" stroke="#4b5563" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="1110" y1="175" x2="1136" y2="175" stroke="#4b5563" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Down arrow from PEX to final box -->
+  <line x1="1220" y1="220" x2="1220" y2="260" stroke="#4b5563" stroke-width="2"/>
+  <line x1="1220" y1="260" x2="700" y2="260" stroke="#4b5563" stroke-width="2"/>
+  <line x1="700" y1="260" x2="700" y2="286" stroke="#4b5563" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Final box: Post-layout re-sim -->
+  <g>
+    <rect x="480" y="300" width="440" height="100" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2.5"/>
+    <text x="700" y="335" text-anchor="middle" font-size="17" font-weight="700" fill="#4c1d95">Post-Layout Re-Simulation</text>
+    <text x="700" y="358" text-anchor="middle" font-size="12" fill="#5b21b6">PEX-extracted netlist replaces ideal schematic</text>
+    <text x="700" y="376" text-anchor="middle" font-size="12" fill="#5b21b6">Real routing R/C impact measured directly against baseline</text>
+  </g>
+
+  <!-- Bottom callouts -->
+  <text x="700" y="435" text-anchor="middle" font-size="12.5" fill="#374151">
+    6T result: 50ps → 92ps write delay  |  8T result: 45ps → 73ps write delay  |  6T read-disturb: ~220mV  |  8T read-disturb: 0mV
+  </text>
+</svg>

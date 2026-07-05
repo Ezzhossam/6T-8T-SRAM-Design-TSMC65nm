@@ -70,27 +70,105 @@ Each cell went through the same rigorous pipeline:
 
 ---
 
+## Figures & Design Rationale
+
+These are your actual exported filenames from `figures/6T/` and `figures/8T/` (extensions omitted below — use whatever format you exported, e.g. `.png`). Each one is captioned with *why* it exists, not just what it shows. Feel free to trim the ones you don't think are worth including — this is written so you can copy whichever captions you want.
+
+### 6T SRAM — `figures/6T/`
+
+**`schematic`**
+The CR/PR-derived widths (300nm access, 360nm pull-down, 240nm pull-up, all at minimum L=60nm) implemented and routed in Cadence Virtuoso.
+
+**`TB`**
+The custom testbench schematic. A bare 6-transistor cell has no way to be driven or observed on its own — this adds write drivers to actually load data onto the bitlines and a way to force known internal states.
+
+**`WL STIM`, `W_ENABLE STIM`, `BL_DATA STIM`**
+Included to explain a debugging finding: driving BL/BLB directly with **ideal voltage sources** initially broke the read simulation, since an ideal source instantly overpowers the cell's small transistors — completely unrealistic. The fix was routing write data through **NMOS pass-transistor write drivers** (gated by W_ENABLE) instead, so the bitlines behave like a real circuit — including a realistic "weak 1 / strong 0" pass-transistor threshold drop.
+
+**`IC`**
+Why initial conditions were forced at all: without them the simulator has no defined starting state for Q/QB, and — combined with the ideal-source issue above — the first read would be meaningless. Forcing Q=0V / QB=1.2V (bitlines at 1.2V) gives the simulation a known, realistic starting point so the first read actually measures the CR-bounded disturb bump rather than simulator noise.
+
+**`scematic_ver`**
+Transient simulation results at the **ideal schematic level** (before any layout parasitics) — the functional baseline: the read phase shows the CR-bounded disturb bump, the hold phase shows the latch staying stable, and the write phase shows the access transistor successfully flipping the cell.
+
+**`TB_V4_NO_PEX`**
+An additional schematic-level transient run (pre-parasitics) — kept alongside `scematic_ver` as a second verification pass of the same ideal-case behavior.
+
+**`PEX_ver`**
+The same testbench re-simulated using the **PEX-extracted netlist** — this is what actually caught the write delay degrading from 50ps (ideal) to 92ps (with real routing R/C), a result the ideal schematic alone could never reveal.
+
+**`TB_V4_PEX`**
+A second post-layout (PEX) transient run — corroborates the delay measurement seen in `PEX_ver`.
+
+**`Layout`**
+Physical layout drawn with deliberate attention to VDD/GND rail routing and minimizing distance between the cross-coupled inverters — shorter routing directly reduces the internal node capacitance that later shows up as post-layout delay.
+
+**`DRC`**
+Zero DRC violations — confirms the layout is manufacturable under TSMC 65nm design rules (spacing, minimum widths, enclosure).
+
+**`LVS`**
+Clean LVS match — confirms the physical layout is electrically identical to the verified schematic (the layout didn't silently change the circuit's behavior).
+
+**`PEX1`**
+Calibre's completion message confirming parasitic extraction finished with zero warnings/errors.
+
+**`PEX2`**
+The full extracted view showing all parasitic resistors and capacitors overlaid on the layout — the actual RC data that feeds the post-layout simulation.
+
+### 8T SRAM — `figures/8T/`
+
+**`SCHEMATIC`**
+The 8T schematic — reuses the *exact* 6T sizing for the core (a deliberate choice to keep the comparison controlled) and adds a 2-transistor read stack sized at the technology minimum (200nm/60nm), since the read path carries no risk of a read-upset and doesn't need to be sized against anything.
+
+**`TB`**
+The 8T testbench schematic. Differs from the 6T version because it has to drive the write port (WWL/WBL/WBLB) and read port (RWL/RBL) completely independently — unlike the 6T cell, they're now physically separate signals.
+
+**`WBL_STIM`, `WBLB_STIM`, `WWL_STIM`, `RWL_STIM`**
+Document exactly how the independent read/write timing was sequenced — getting the RWL and WWL pulses timed correctly relative to each other is what makes the Write → Read → Write proof valid.
+
+**`TB_WITH_OUT_PEX`**
+The key comparison figure: schematic-level (pre-parasitic) transient simulation where, during the read phase, node Q stays **perfectly flat at 1.2V** — directly contrasting with the ~220mV bump seen in the 6T read. This is the core simulation evidence for the whole architectural argument (isolated read port = zero read-disturb).
+
+**`TB_WITH_PEX`**
+The same testbench re-simulated using the PEX-extracted netlist — shows write delay degrading from 45ps (ideal) to 73ps (real routing parasitics included).
+
+**`Layout`**
+Physical layout of the 8T cell.
+
+**`DRC`**
+Zero DRC violations on the larger 8-transistor cell.
+
+**`LVS`**
+Clean LVS match confirming layout-schematic equivalence.
+
+**`PEX1`**
+Calibre's completion message confirming the extraction ran with zero warnings/errors.
+
+**`PEX2`**
+The combined view of all extracted parasitic resistors and MOSFETs overlaid on the layout in one image.
+
+**`PEX3`**
+A zoomed-in detail view of the same extracted parasitics in `PEX2`, showing the RC network more clearly at the transistor level.
+---
+
 ## Repo Structure
 
 ```
 .
 ├── README.md
+├── LICENSE
 ├── docs/
-│   └── ECE411_SRAM_Report.pdf        # Full project report (theory, derivations, all figures)
-├── schematics/
-│   ├── 6T_SRAM/                      # Schematic + testbench netlists/exports
-│   └── 8T_SRAM/
-├── layout/
-│   ├── 6T_SRAM/                      # Layout exports (GDS/screenshots)
-│   └── 8T_SRAM/
-├── verification/
-│   ├── drc_reports/                  # Calibre DRC logs
-│   ├── lvs_reports/                  # Calibre LVS logs
-│   └── pex_results/                  # Extracted netlists / parasitic reports
-└── figures/                          # Simulation waveform screenshots
+│   ├── ECE411_SRAM_Report.pdf        # Full project report (theory, derivations, all figures)
+│   └── Project_Description.pdf       # Original course assignment brief
+├── cadence_project/
+│   └── SRAM_PARTA.rar                # Cadence Virtuoso schematic/layout library (6T + 8T cells & testbenches)
+└── figures/
+    ├── verification_pipeline.svg     # Design flow diagram
+    ├── 6T/                           # Cadence/Calibre screenshots for the 6T cell (see "Figures & Design Rationale")
+    └── 8T/                           # Cadence/Calibre screenshots for the 8T cell
 ```
 
-> Note: this repo does not include TSMC 65nm PDK files (technology/rule files), which are under foundry NDA. Only original schematic/layout work and simulation results are shared here.
+> **Opening the Cadence project:** `SRAM_PARTA.rar` contains the Virtuoso library used for this project (schematics, layouts, and testbenches for both cells). It requires **Cadence Virtuoso** with a **TSMC 65nm PDK** license set up locally to open — the PDK itself is not included here, as it's under foundry NDA. Everyone without local Cadence/PDK access can review the full design and results through the report and figures instead.
 
 ## Tools Used
 
