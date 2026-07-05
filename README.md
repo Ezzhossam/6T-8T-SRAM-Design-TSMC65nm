@@ -124,11 +124,11 @@ Each cell went through the same rigorous pipeline:
 
 **LVS — clean match.** Confirms the physical layout is electrically identical to the verified schematic — the layout didn't silently change the circuit's behavior.
 
-<p align="center"><img src="Figures/6T/PEX1.png" width="650"></p>
+<p align="center"><img src="Figures/6T/PEX 1.png" width="650"></p>
 
 **PEX completion.** Calibre's confirmation message that parasitic extraction finished with zero warnings/errors.
 
-<p align="center"><img src="Figures/6T/PEX2.png" width="650"></p>
+<p align="center"><img src="Figures/6T/PEX 2.png" width="650"></p>
 
 **Extracted parasitics.** The full extracted view showing all parasitic resistors and capacitors overlaid on the layout — the actual RC data that feeds the post-layout simulation.
 
