@@ -70,27 +70,29 @@ Each cell went through the same rigorous pipeline:
 
 ## Figures & Design Rationale
 
+## Figures & Design Rationale
+
 > Filenames below assume `.png` — if you exported as `.jpg`/`.gif`, just find-and-replace the extension.
 
 ### 6T SRAM — `Figures/6T/`
 
-![6T Schematic](Figures/6T/schematic.png)
+<p align="center"><img src="Figures/6T/schematic.png" width="650"></p>
 
 **Cadence schematic.** The CR/PR-derived widths (300nm access, 360nm pull-down, 240nm pull-up, all at minimum L=60nm) implemented and routed in Cadence Virtuoso.
 
-![6T Testbench](Figures/6T/TB.png)
+<p align="center"><img src="Figures/6T/TB.png" width="650"></p>
 
 **Testbench schematic.** A bare 6-transistor cell has no way to be driven or observed on its own — this adds write drivers to actually load data onto the bitlines, and a way to force known internal states.
 
-![WL Stimulus](Figures/6T/WL%20STIM.png)
-
-![W_ENABLE Stimulus](Figures/6T/W_ENABLE%20STIM.png)
-
-![BL_DATA Stimulus](Figures/6T/BL_DATA%20STIM.png)
+<p align="center">
+  <img src="Figures/6T/WL%20STIM.png" width="31%">
+  <img src="Figures/6T/W_ENABLE%20STIM.png" width="31%">
+  <img src="Figures/6T/BL_DATA%20STIM.png" width="31%">
+</p>
 
 **Stimulus configuration (WL, W_ENABLE, BL_DATA).** Included to explain a debugging finding: driving BL/BLB directly with **ideal voltage sources** initially broke the read simulation, since an ideal source instantly overpowers the cell's small transistors — completely unrealistic. The fix was routing write data through **NMOS pass-transistor write drivers** (gated by W_ENABLE) instead, so the bitlines behave like a real circuit — including a realistic "weak 1 / strong 0" pass-transistor threshold drop.
 
-![Initial Conditions](Figures/6T/IC.png)
+<p align="center"><img src="Figures/6T/IC.png" width="650"></p>
 
 **Initial conditions.** Why these were forced at all: without them the simulator has no defined starting state for Q/QB, and — combined with the ideal-source issue above — the first read would be meaningless. Forcing Q=0V / QB=1.2V (bitlines at 1.2V) gives the simulation a known, realistic starting point so the first read actually measures the CR-bounded disturb bump rather than simulator noise.
 
@@ -110,43 +112,42 @@ Each cell went through the same rigorous pipeline:
 
 **A second post-layout (PEX) transient run**, corroborating the delay measurement above.
 
-![6T Layout](Figures/6T/Layout.png)
+<p align="center"><img src="Figures/6T/Layout.png" width="650"></p>
 
 **Physical layout.** Drawn with deliberate attention to VDD/GND rail routing and minimizing distance between the cross-coupled inverters — shorter routing directly reduces the internal node capacitance that later shows up as post-layout delay.
 
-![6T DRC](Figures/6T/DRC.png)
+<p align="center"><img src="Figures/6T/DRC.png" width="650"></p>
 
 **DRC — zero violations.** Confirms the layout is manufacturable under TSMC 65nm design rules (spacing, minimum widths, enclosure).
 
-![6T LVS](Figures/6T/LVS.png)
+<p align="center"><img src="Figures/6T/LVS.png" width="650"></p>
 
 **LVS — clean match.** Confirms the physical layout is electrically identical to the verified schematic — the layout didn't silently change the circuit's behavior.
 
-![6T PEX completion](Figures/6T/PEX1.png)
+<p align="center"><img src="Figures/6T/PEX1.png" width="650"></p>
 
 **PEX completion.** Calibre's confirmation message that parasitic extraction finished with zero warnings/errors.
 
-![6T PEX extracted view](Figures/6T/PEX2.png)
+<p align="center"><img src="Figures/6T/PEX2.png" width="650"></p>
 
 **Extracted parasitics.** The full extracted view showing all parasitic resistors and capacitors overlaid on the layout — the actual RC data that feeds the post-layout simulation.
 
 ### 8T SRAM — `Figures/8T/`
 
-![8T Schematic](Figures/8T/SCHEMATIC.png)
+<p align="center"><img src="Figures/8T/SCHEMATIC.png" width="650"></p>
 
 **Cadence schematic.** Reuses the *exact* 6T sizing for the core (a deliberate choice to keep the comparison controlled) and adds a 2-transistor read stack sized at the technology minimum (200nm/60nm), since the read path carries no risk of a read-upset and doesn't need to be sized against anything.
 
-![8T Testbench](Figures/8T/TB.png)
+<p align="center"><img src="Figures/8T/TB.png" width="650"></p>
 
 **Testbench schematic.** Differs from the 6T version because it has to drive the write port (WWL/WBL/WBLB) and read port (RWL/RBL) completely independently — unlike the 6T cell, they're now physically separate signals.
 
-![WBL Stimulus](Figures/8T/WBL_STIM.png)
-
-![WBLB Stimulus](Figures/8T/WBLB_STIM.png)
-
-![WWL Stimulus](Figures/8T/WWL_STIM.png)
-
-![RWL Stimulus](Figures/8T/RWL_STIM.png)
+<p align="center">
+  <img src="Figures/8T/WBL_STIM.png" width="23%">
+  <img src="Figures/8T/WBLB_STIM.png" width="23%">
+  <img src="Figures/8T/WWL_STIM.png" width="23%">
+  <img src="Figures/8T/RWL_STIM.png" width="23%">
+</p>
 
 **Stimulus configuration (WBL, WBLB, WWL, RWL).** Documents exactly how the independent read/write timing was sequenced — getting the RWL and WWL pulses timed correctly relative to each other is what makes the Write → Read → Write proof valid.
 
@@ -158,31 +159,30 @@ Each cell went through the same rigorous pipeline:
 
 **Transient simulation — post-layout (with PEX).** The same testbench re-simulated using the PEX-extracted netlist — shows write delay degrading from 45ps (ideal) to 73ps (real routing parasitics included).
 
-![8T Layout](Figures/8T/Layout.png)
+<p align="center"><img src="Figures/8T/Layout.png" width="650"></p>
 
 **Physical layout** of the 8T cell.
 
-![8T DRC](Figures/8T/DRC.png)
+<p align="center"><img src="Figures/8T/DRC.png" width="650"></p>
 
 **DRC — zero violations** on the larger 8-transistor cell.
 
-![8T LVS](Figures/8T/LVS.png)
+<p align="center"><img src="Figures/8T/LVS.png" width="650"></p>
 
 **LVS — clean match** confirming layout-schematic equivalence.
 
-![8T PEX completion](Figures/8T/PEX1.png)
+<p align="center"><img src="Figures/8T/PEX1.png" width="650"></p>
 
 **PEX completion.** Calibre's confirmation message that extraction ran with zero warnings/errors.
 
-![8T PEX extracted view](Figures/8T/PEX2.png)
+<p align="center"><img src="Figures/8T/PEX2.png" width="650"></p>
 
 **Extracted parasitics.** The combined view of all extracted parasitic resistors and MOSFETs overlaid on the layout, in one image.
 
-![8T PEX zoomed](Figures/8T/PEX3.png)
+<p align="center"><img src="Figures/8T/PEX3.png" width="650"></p>
 
 **Extracted parasitics — zoomed detail.** A closer view of the same extracted network from `PEX2`, showing the RC detail more clearly at the transistor level.
 
-A zoomed-in detail view of the same extracted parasitics in `PEX2`, showing the RC network more clearly at the transistor level.
 ---
 
 ## Repo Structure
